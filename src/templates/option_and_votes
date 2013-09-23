@@ -1,0 +1,14 @@
+{{define "options_and_votes"}}
+<div class="option">
+     <span class="name">{{.Data.Option.Name}}</span>
+     {{if .Show_results}}
+     	  {{range $k, $v := .OptionAndVotes.GetResult}}
+	  	  <span class="{{$k}}">{{$v}}</span>
+	  {{end}}
+     {{end}}
+     {{if .Show_vote}}
+     	  {{range $k, $_ := .OptionAndVotes.GetResult}}
+	  	  <input type="radio" class="vote_{{$k}}"></input>
+	  {{end}}
+     {{end}}
+</div>{{end}}

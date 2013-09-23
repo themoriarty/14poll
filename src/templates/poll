@@ -1,0 +1,14 @@
+{{define "poll"}}
+<p>Poll
+{{range .Data.Options}}
+	{{template "options_and_votes" $.Prepare .}}
+{{else}}
+no options
+{{end}}
+
+{{range .Data.Users}}
+{{template "user" .}}
+{{else}}
+no users
+{{end}}
+</p>{{end}}
