@@ -33,6 +33,7 @@ type OptionAndVotes struct{
 }
 
 type Poll struct{
+	Id string
 	Options []OptionAndVotes
 	Users []User
 }

@@ -1,0 +1,3 @@
+[submodule "src/nosurf"]
+	path = src/nosurf
+	url = https://github.com/justinas/nosurf

@@ -1,14 +1,25 @@
 {{define "poll"}}
-<p>Poll
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/poll.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/static/main.js"></script>
+  </head>
+  <body>
+<div class="poll" data-name="{{.Data.Id}}">Poll
+{{.Token}}
 {{range .Data.Options}}
 	{{template "options_and_votes" $.Prepare .}}
 {{else}}
-no options
+	no options
 {{end}}
 
 {{range .Data.Users}}
-{{template "user" .}}
+	{{template "user" .}}
 {{else}}
-no users
+	no users
 {{end}}
-</p>{{end}}
+</div>
+</body>
+</html>
+{{end}}

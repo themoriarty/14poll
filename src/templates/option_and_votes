@@ -2,13 +2,18 @@
 <div class="option">
      <span class="name">{{.Data.Option.Name}}</span>
      {{if .Show_results}}
+     	  <div class="results">
      	  {{range $k, $v := .OptionAndVotes.GetResult}}
 	  	  <span class="{{$k}}">{{$v}}</span>
 	  {{end}}
+	  </div>
      {{end}}
      {{if .Show_vote}}
-     	  {{range $k, $_ := .OptionAndVotes.GetResult}}
-	  	  <input type="radio" class="vote_{{$k}}"></input>
-	  {{end}}
+     	  <div class="vote" data-name="{{$.OptionAndVotes.Option.Name}}">
+     	    {{range $k, $_ := .OptionAndVotes.GetResult}}
+	      <div class="btn {{$k}}" data-vote="{{$k}}"></div>
+	    {{end}}
+	  </div>
      {{end}}
-</div>{{end}}
+</div>
+{{end}}
