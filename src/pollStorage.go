@@ -15,7 +15,7 @@ func FindPoll(ctx *appengine.Context, id string) (*core.Poll, error){
 		(*ctx).Errorf("Can't load poll: %s", err)
 		return nil, err
 	}
-	optionsQuery := datastore.NewQuery("option").Ancestor(pollKey)
+	optionsQuery := datastore.NewQuery("option").Ancestor(pollKey).Order("Option.Created")
 	options := make([]core.OptionAndVotes, 0, 0)
 	if _, err := optionsQuery.GetAll(*ctx, &options); err != nil{
 		(*ctx).Errorf("Can't load options for poll %s: %s", poll, err)

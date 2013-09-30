@@ -1,19 +1,32 @@
 {{define "options_and_votes"}}
-<div class="option">
-     <span class="name">{{.Data.Option.Name}}</span>
+<div class="panel panel-default">
+<div class="option row panel-body">
+  <div class="text col-md-6">  
+    {{if .Data}}
+      <h4 class="name">{{.Data.Option.Name}}</h4>
+    {{else}}
+      <input class="form-control" placeholder="New option" type="text"></input>
+    {{end}}
+  </div>
+  <div class="col-md-6">
+  {{if .HasData}}
      {{if .ShowResults}}
      	  <div class="results">
      	  {{range $k, $v := .OptionAndVotes.GetResult}}
-	  	  <span class="{{$k}}">{{$v}}</span>
+	  	  <h5 class="col-md-1 {{$k}}">{{$v}}</h5>
 	  {{end}}
 	  </div>
      {{end}}
-     {{if not (.OptionAndVotes.DoneFor .UserId)}}
-     	  <div class="vote" data-name="{{$.OptionAndVotes.Option.Name}}">
+  {{end}}
+     {{if (not (.OptionAndVotes.DoneFor .UserId))}}
+     	  <div class="vote" {{if .HasData}}data-name="{{$.OptionAndVotes.Option.Name}}"{{end}}>
      	    {{range $k, $_ := .OptionAndVotes.GetResult}}
-	      <div class="btn {{$k}}" data-vote="{{$k}}"></div>
+	      <button class="col-md-1 btn btn-link"><img class="mybtn {{$k}}" data-vote="{{$k}}" src="/static/{{$k}}.png"></button>
 	    {{end}}
 	  </div>
      {{end}}
+  {{/*end*/}}
+  </div>
+</div>
 </div>
 {{end}}

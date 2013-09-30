@@ -20,12 +20,25 @@ type Context struct{
 }
 
 func (this *Context) Prepare(data interface{}) *Context{
-	return &Context{this.UserId, this.Token, data, this.ShowResults}
+	if data != nil{
+		var value OptionAndVotes = data.(OptionAndVotes)
+		return &Context{this.UserId, this.Token, &value, this.ShowResults}
+	} else{
+		return &Context{this.UserId, this.Token, nil, this.ShowResults}
+	}
 }
 
-func (this *Context) OptionAndVotes() OptionAndVotes{
-	return this.Data.(OptionAndVotes)
+func (this *Context) OptionAndVotes() *OptionAndVotes{
+	if this.Data != nil{
+		return this.Data.(*OptionAndVotes)
+	} else{
+		return nil
+	}
 }
+func (this *Context) HasData() bool{
+	return this.Data != nil
+}
+
 func itos(v int) string{
 	return map[int]string{VoteFor: "VoteFor",
 		VoteAgainst: "VoteAgainst",
@@ -38,13 +51,15 @@ func VoteStoi(v string) int{
 }
 
 
-func (this OptionAndVotes) GetResult() map[string]int{
+func (this *OptionAndVotes) GetResult() map[string]int{
 	ret := map[string]int {}
 	for i := 0; i < VoteLast; i++{
 		ret[itos(i)] = 0
 	}
-	for _, v := range(this.Votes){
-		ret[itos(v.Vote.Value)]++
+	if this != nil{
+		for _, v := range(this.Votes){
+			ret[itos(v.Vote.Value)]++
+		}
 	}
 	return ret
 }

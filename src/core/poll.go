@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"time"
 	)
 
@@ -46,7 +47,14 @@ type Poll struct{
 	Dirty bool `datastore:"-"`
 }
 
-func (this OptionAndVotes) DoneFor(userId UserId) bool{
+func NewPoll(id string) *Poll{
+	return &Poll{id, []OptionAndVotes{}, true}
+}
+
+func (this *OptionAndVotes) DoneFor(userId UserId) bool{
+	if this == nil{
+		return false
+	}
 	for _, vote := range(this.Votes){
 		if vote.UserId == userId{
 			return true
@@ -65,6 +73,9 @@ func (this *Poll) DoneFor(userId UserId) bool{
 }
 
 func (this *Poll) CastVote(userId UserId, optionName string, choiceString string) error{
+	if optionName == ""{
+		return fmt.Errorf("Empty options are not allowed")
+	}
 	vote := Vote{VoteStoi(choiceString), time.Now()}
 	for i, option := range(this.Options){
 		if option.Option.Name == optionName{

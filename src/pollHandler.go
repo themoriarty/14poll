@@ -10,10 +10,11 @@ import (
 	"appengine/user"
 	"appengine/datastore"
 	"src/core"
+	"src/nosurf"
 )
 
-var pollView = regexp.MustCompile("^/poll/(\\w+)/?$")
-var pollVote = regexp.MustCompile("^/poll/(\\w+)/vote$")
+var pollView = regexp.MustCompile("^/poll/([^/]+)/?$")
+var pollVote = regexp.MustCompile("^/poll/([^/]+)/vote$")
 func pollHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Context, usr *user.User){
 	if match := pollVote.FindStringSubmatch(r.URL.Path); match != nil{
 		pollVoteHandler(w, r, ctx, usr, match[1]);
@@ -46,8 +47,13 @@ func pollVoteHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Cont
 	//voteDecoder := json.NewDecoder(strings.NewReader(r.FormValue("data")))
 	//v := vote{r.FormValue("poll"), , };
 	if err := datastore.RunInTransaction(*ctx, func(tc appengine.Context) error{
+		if pollId == ""{
+			return fmt.Errorf("Empty polls are not allowed")
+		}
 		poll, err := FindPoll(ctx, pollId)
-		if err != nil{
+		if err == datastore.ErrNoSuchEntity{
+			poll = core.NewPoll(pollId)
+		} else if err != nil{
 			return err
 		}
 		if err := poll.CastVote(core.UserId(usr.String()), r.FormValue("option"), r.FormValue("choice")); err != nil{
@@ -63,5 +69,18 @@ func pollVoteHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Cont
 	fmt.Fprintf(w, "{ok: true}")
 }
 func pollViewHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Context, usr *user.User, pollId string){
-	fmt.Fprintf(w, "%s: %s", pollId, "view")
+	poll, err := FindPoll(ctx, pollId)
+	if err == datastore.ErrNoSuchEntity{
+		poll = core.NewPoll(pollId)
+	} else if err != nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		fmt.Fprintf(w, "%s", err)
+		return
+	}
+	if out, err := poll.Render(nosurf.Token(r), core.UserId(usr.Email)); err != nil{
+		w.WriteHeader(http.StatusServiceUnavailable)
+		fmt.Fprintf(w, "%s", err)
+	} else{
+		fmt.Fprintf(w, "%s", out)
+	}	
 }

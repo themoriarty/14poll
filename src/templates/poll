@@ -1,25 +1,35 @@
 {{define "poll"}}
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <link rel="stylesheet" type="text/css" href="/static/poll.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="/static/main.js"></script>
     <script type="text/javascript">var g_token="{{.Token}}";</script>
   </head>
   <body>
-<div class="poll" data-name="{{.Data.Id}}">Poll
-{{range .Data.Options}}
-	{{template "options_and_votes" $.Prepare .}}
-{{else}}
-	no options
-{{end}}
-{{/*
-	{{range .Data.Users}}
-		{{template "user" .}}
-		{{else}}
-			no users
-			{{end}}
-*/}}
+<div class="container">
+  <div class="poll" data-name="{{.Data.Id}}">
+    <div class="header">
+      <h1>{{.Data.Id}}</h1>
+    </div>
+    <div class="jumbotron">
+      {{range .Data.Options}}
+        {{template "options_and_votes" $.Prepare .}}
+      {{end}}
+      {{template "options_and_votes" $.Prepare nil}}
+    </div>
+    {{/*
+    {{range .Data.Users}}
+      {{template "user" .}}
+    {{else}}
+    no users
+    {{end}}
+    */}}
+  </div>
 </div>
 </body>
 </html>

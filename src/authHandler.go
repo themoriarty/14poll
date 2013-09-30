@@ -24,6 +24,7 @@ func (this context) fn(w http.ResponseWriter, r *http.Request){
 		w.WriteHeader(http.StatusFound)
 		return
 	}
+	w.Header().Set("Content-type", "text/html; charset=utf-8")
 	this.callback(w, r, &ctx, usr)
 }
 

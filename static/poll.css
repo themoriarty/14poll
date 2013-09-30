@@ -1,33 +1,14 @@
-/*input {
-    display: block;
-}
-input:before {
-    display: block;
-    content: attr(value);
-}*/
-.vote .btn{
-    display: inline-block;
-    margin: 0em;
-    padding: 0em;
-    width: 24px;
-    height: 24px;
-}
-
-.vote .btn:not(.disabled){
-    cursor: default;
-}
-
 .vote .disabled{
     cursor: arrow;
     opacity: 0.3;
 }
 
-.vote .VoteAgainst{
-    background-image: url("/static/VoteAgainst.png");
-    /*background-color: red;*/
+.VoteAgainst{
+    color: red;
 }
-
-.vote .VoteFor{
-    background-image: url("/static/VoteFor.png");
-    /*background-color: green;*/
+.VoteFor{
+    color: green;
+}
+.VoteNeutral{
+    color: blue;
 }
