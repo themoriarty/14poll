@@ -13,14 +13,14 @@ var templates = template.Must(template.ParseFiles(path.Join(templates_dir, "user
 
 
 type Context struct{
+	UserId UserId
 	Token string
 	Data interface{}
-	Show_results bool
-	Show_vote bool
+	ShowResults bool
 }
 
 func (this *Context) Prepare(data interface{}) *Context{
-	return &Context{this.Token, data, this.Show_results, this.Show_vote}
+	return &Context{this.UserId, this.Token, data, this.ShowResults}
 }
 
 func (this *Context) OptionAndVotes() OptionAndVotes{
@@ -31,6 +31,12 @@ func itos(v int) string{
 		VoteAgainst: "VoteAgainst",
 	VoteNeutral: "VoteNeutral"}[v]
 }
+func VoteStoi(v string) int{
+	return map[string]int{"VoteFor": VoteFor,
+		"VoteAgainst": VoteAgainst,
+	"VoteNeutral": VoteNeutral}[v]
+}
+
 
 func (this OptionAndVotes) GetResult() map[string]int{
 	ret := map[string]int {}
@@ -38,7 +44,7 @@ func (this OptionAndVotes) GetResult() map[string]int{
 		ret[itos(i)] = 0
 	}
 	for _, v := range(this.Votes){
-		ret[itos(v.Value)]++
+		ret[itos(v.Vote.Value)]++
 	}
 	return ret
 }
@@ -47,9 +53,9 @@ func (this OptionAndVotes) ToString(key string) string{
 }
 
 
-func (poll *Poll) Render(token string, show_results bool, show_vote bool) (string, error) {
+func (poll *Poll) Render(token string, usr UserId) (string, error) {
 	writer := bytes.NewBuffer(nil)
-	if err := templates.ExecuteTemplate(writer, "poll", &Context{token, poll, show_results, show_vote}); err != nil{
+	if err := templates.ExecuteTemplate(writer, "poll", &Context{usr, token, poll, poll.DoneFor(usr)}); err != nil{
 		return "", err
 	}
 	return writer.String(), nil

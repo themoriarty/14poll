@@ -14,7 +14,7 @@ input:before {
 }
 
 .vote .btn:not(.disabled){
-    cursor: pointer;
+    cursor: default;
 }
 
 .vote .disabled{

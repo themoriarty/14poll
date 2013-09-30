@@ -1,14 +1,14 @@
 {{define "options_and_votes"}}
 <div class="option">
      <span class="name">{{.Data.Option.Name}}</span>
-     {{if .Show_results}}
+     {{if .ShowResults}}
      	  <div class="results">
      	  {{range $k, $v := .OptionAndVotes.GetResult}}
 	  	  <span class="{{$k}}">{{$v}}</span>
 	  {{end}}
 	  </div>
      {{end}}
-     {{if .Show_vote}}
+     {{if not (.OptionAndVotes.DoneFor .UserId)}}
      	  <div class="vote" data-name="{{$.OptionAndVotes.Option.Name}}">
      	    {{range $k, $_ := .OptionAndVotes.GetResult}}
 	      <div class="btn {{$k}}" data-vote="{{$k}}"></div>

@@ -4,21 +4,22 @@
     <link rel="stylesheet" type="text/css" href="/static/poll.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="/static/main.js"></script>
+    <script type="text/javascript">var g_token="{{.Token}}";</script>
   </head>
   <body>
 <div class="poll" data-name="{{.Data.Id}}">Poll
-{{.Token}}
 {{range .Data.Options}}
 	{{template "options_and_votes" $.Prepare .}}
 {{else}}
 	no options
 {{end}}
-
-{{range .Data.Users}}
-	{{template "user" .}}
-{{else}}
-	no users
-{{end}}
+{{/*
+	{{range .Data.Users}}
+		{{template "user" .}}
+		{{else}}
+			no users
+			{{end}}
+*/}}
 </div>
 </body>
 </html>

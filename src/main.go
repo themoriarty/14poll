@@ -22,9 +22,22 @@ func handler(w http.ResponseWriter, r *http.Request, ctx *appengine.Context, usr
 	user2 := core.User{"testName2", "testEmail2"};
 	poll := core.Poll{
 		"testPoll",
-		[]core.OptionAndVotes{core.OptionAndVotes{core.Option{"op1", user1, time.Now()}, map[int]core.Vote{0: core.Vote{core.VoteNeutral, time.Now()}, 1: core.Vote{core.VoteAgainst, time.Now()}}}, core.OptionAndVotes{core.Option{"op2", user1, time.Now()}, map[int]core.Vote{0: core.Vote{core.VoteNeutral, time.Now()}, 1: core.Vote{core.VoteAgainst, time.Now()}}}},
-		[]core.User{user1, user2}};
-	if out, err := poll.Render(token, true, true); err != nil{
+		[]core.OptionAndVotes{core.OptionAndVotes{core.Option{"op1", user1.UserId, time.Now()}, []core.UserVote{core.UserVote{user1.UserId, core.Vote{core.VoteNeutral, time.Now()}}, core.UserVote{user2.UserId, core.Vote{core.VoteAgainst, time.Now()}}}, true}, 
+			core.OptionAndVotes{core.Option{"op2", user1.UserId, time.Now()}, []core.UserVote{core.UserVote{user2.UserId, core.Vote{core.VoteNeutral, time.Now()}}, core.UserVote{user1.UserId, core.Vote{core.VoteAgainst, time.Now()}}}, true}}, true};
+	if (false){
+		err := StorePoll(ctx, &poll)
+		if (err != nil){
+			fmt.Fprintf(w, "Can't save poll: %s", err)
+			return
+		}
+	}
+	if pollV, err := FindPoll(ctx, "testPoll"); err != nil{
+		fmt.Fprintf(w, "Can't load poll: %s", err)
+		return
+	} else{
+		poll = *pollV
+	}
+	if out, err := poll.Render(token, core.UserId(usr.Email)); err != nil{
 		fmt.Fprintf(w, "Can't render poll: %s", err)
 	} else{
 		fmt.Fprintf(w, "%s", out)
