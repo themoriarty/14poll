@@ -41,6 +41,6 @@ func handler(w http.ResponseWriter, r *http.Request, ctx *appengine.Context, usr
 	} else{
 		fmt.Fprintf(w, "%s", out)
 	}*/
-	fmt.Fprintf(w, "%s", "Nothing to see there")
+	fmt.Fprintf(w, "%s", "<html><head></head><body>Nothing to see there</body></html>")
 }
 

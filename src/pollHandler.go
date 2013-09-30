@@ -39,6 +39,10 @@ type response struct{
 	Data interface{}
 }
 
+func ToUserId(usr *user.User) core.UserId{
+	return core.UserId(usr.Email)
+}
+
 func pollVoteHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Context, usr *user.User, pollId string){
 	if (r.Method != "POST"){
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -56,7 +60,7 @@ func pollVoteHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Cont
 		} else if err != nil{
 			return err
 		}
-		if err := poll.CastVote(core.UserId(usr.String()), r.FormValue("option"), r.FormValue("choice")); err != nil{
+		if err := poll.CastVote(ToUserId(usr), r.FormValue("option"), r.FormValue("choice")); err != nil{
 			(*ctx).Errorf("can't save poll %s: %s", poll, err)
 			return err
 		}
@@ -77,7 +81,7 @@ func pollViewHandler(w http.ResponseWriter, r *http.Request, ctx *appengine.Cont
 		fmt.Fprintf(w, "%s", err)
 		return
 	}
-	if out, err := poll.Render(nosurf.Token(r), core.UserId(usr.Email)); err != nil{
+	if out, err := poll.Render(nosurf.Token(r), ToUserId(usr)); err != nil{
 		w.WriteHeader(http.StatusServiceUnavailable)
 		fmt.Fprintf(w, "%s", err)
 	} else{
