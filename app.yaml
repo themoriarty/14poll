@@ -1,5 +1,5 @@
 application: 14poll-cube
-version: 1a
+version: 1b
 runtime: go
 api_version: go1
 

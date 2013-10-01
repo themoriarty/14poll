@@ -18,6 +18,39 @@ function getOption(btn){
     return [btn.closest(".vote").attr("data-name"), false];
 }
 
+function sortResults(){
+    var indexes = new Array();
+    $(".results").each(function(i){
+	indexes.push(i);
+    });
+    function getScore(i, kind){
+	return $($(".results")[i]).find("." + kind).text() * 1;
+    }
+    function cmp(i1, i2, kind){
+	var v1 = getScore(i1, kind);
+	var v2 = getScore(i2, kind);
+	if (v1 < v2){
+	    return -1;
+	} else if (v1 == v2){
+	    return 0;
+	}
+	return 1;
+    }
+    indexes.sort(function (i1, i2){
+	var ret = cmp(i1, i2, "VoteAgainst");
+	if (ret == 0){
+	    ret = -cmp(i1, i2, "VoteFor");
+	}
+	return ret;
+    });
+    indexes.forEach(function(e, i){
+	indexes[i] = $($(".option")[e]).clone();
+    });
+    indexes.forEach(function(e, i){
+	$($(".option")[i]).replaceWith(e);
+    });
+}
+
 function main(){
     $(".vote .mybtn").click(function(){
 	if (!$(this).hasClass("disabled")){
@@ -64,4 +97,7 @@ function main(){
 	    }
 	}
     });
+    if ($(".vote").length < 2){
+	sortResults();
+    }
 }
