@@ -1,5 +1,5 @@
 .vote .disabled{
-    cursor: arrow;
+    cursor: default;
     opacity: 0.3;
 }
 

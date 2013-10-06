@@ -21,7 +21,7 @@
      {{if (not (.OptionAndVotes.DoneFor .UserId))}}
      	  <div class="vote" {{if .HasData}}data-name="{{$.OptionAndVotes.Option.Name}}"{{end}}>
      	    {{range $k, $_ := .OptionAndVotes.GetResult}}
-	      <button class="col-md-1 btn btn-link"><img class="mybtn {{$k}}" data-vote="{{$k}}" src="/static/{{$k}}.png"></button>
+	      <button class="col-md-1 btn btn-link mybtn {{$k}}" data-vote="{{$k}}"><img src="/static/{{$k}}.png"></button>
 	    {{end}}
 	  </div>
      {{end}}
